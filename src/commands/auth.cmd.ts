@@ -47,6 +47,15 @@ async function handleAuthExchange(_deps: CommandDeps, options: { token: string }
   }
 }
 
+async function handleAuthSetToken(_deps: CommandDeps, token: string): Promise<void> {
+  const tokenStore = createTokenStore();
+  await tokenStore.save({
+    accessToken: token,
+    createdAt: Date.now(),
+  });
+  console.log('Access token saved.');
+}
+
 async function handleAuthStatus(deps: CommandDeps): Promise<void> {
   if (deps.config.meta_access_token) {
     const source = deps.config.sources.meta_access_token ?? 'file';
@@ -82,6 +91,11 @@ export function registerAuthCommand(program: Command): void {
     .command('logout')
     .description('Clear cached authentication token')
     .action(runCommand(handleAuthLogout, { requireAuth: false }));
+
+  auth
+    .command('set-token <token>')
+    .description('Save an access token directly to the local cache')
+    .action(runCommand(handleAuthSetToken, { requireAuth: false }));
 
   auth
     .command('exchange')

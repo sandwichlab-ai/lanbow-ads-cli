@@ -60,6 +60,7 @@ describe('command registration', () => {
     expect(findCommand(program, 'auth').commands.map((c) => c.name())).toEqual([
       'login',
       'logout',
+      'set-token',
       'exchange',
       'status',
     ]);
@@ -143,6 +144,6 @@ describe('command registration', () => {
     registerTargetingCommand(program);
 
     const leafCount = program.commands.reduce((sum, group) => sum + countLeafCommands(group), 0);
-    expect(leafCount).toBe(40);
+    expect(leafCount).toBe(41);
   });
 });
